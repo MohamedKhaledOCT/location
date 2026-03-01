@@ -969,7 +969,6 @@
 
         <div id="filterBanner" class="filter-banner">
             <span id="filterText"></span>
-            <a href="?">← الرجوع للتقرير الكامل</a>
         </div>
         <div id="toastMsg" class="toast"></div>
 
@@ -979,7 +978,7 @@
             <p>الفترة: 28 يناير - 28 فبراير 2026 | التارجت: 3 لوكيشن/يوم</p>
         </div>
 
-        <div class="notes-card">
+        <div id="notesCard" class="notes-card">
             <h3>📌 ملاحظات هامة</h3>
             <ul>
                 <li>أيام <strong>6، 13، 20، 27 فبراير</strong> وكذلك <strong>30 يناير</strong> هي أيام <strong>جمعة
@@ -997,7 +996,7 @@
             </ul>
         </div>
 
-        <h2 class="section-title">📊 تفاصيل أداء كل مندوب</h2>
+        <h2 id="detailsTitle" class="section-title">📊 تفاصيل أداء كل مندوب</h2>
 
         <div class="reps-grid" id="repsGrid"></div>
 
@@ -1234,19 +1233,18 @@
         const grid = document.getElementById('repsGrid');
 
         if (repFilter !== null && reps[parseInt(repFilter)]) {
-            // Single rep mode
+            // Single rep mode — hide unnecessary sections first
             const idx = parseInt(repFilter);
             const rep = reps[idx];
+            document.getElementById('notesCard').style.display = 'none';
+            document.getElementById('detailsTitle').style.display = 'none';
+            document.querySelector('.summary-section').style.display = 'none';
+            // Show only this rep's card
             grid.innerHTML = buildRepCard(rep);
-            // Build summary for just this rep
-            document.getElementById('summaryTable').innerHTML = buildSummaryTable();
             // Show filter banner
             const banner = document.getElementById('filterBanner');
             banner.classList.add('show');
             document.getElementById('filterText').textContent = '👤 عرض تقرير: ' + rep.name + ' (' + rep.region + ')';
-            // Hide summary section and notes in single rep mode
-            document.querySelector('.summary-section').style.display = 'none';
-            document.querySelector('.notes-card').style.display = 'none';
             // Update page title
             document.title = 'تقرير ' + rep.name + ' - شركة ماليبو';
         } else {
