@@ -1244,8 +1244,9 @@
             const banner = document.getElementById('filterBanner');
             banner.classList.add('show');
             document.getElementById('filterText').textContent = '👤 عرض تقرير: ' + rep.name + ' (' + rep.region + ')';
-            // Hide summary section in single rep mode
+            // Hide summary section and notes in single rep mode
             document.querySelector('.summary-section').style.display = 'none';
+            document.querySelector('.notes-card').style.display = 'none';
             // Update page title
             document.title = 'تقرير ' + rep.name + ' - شركة ماليبو';
         } else {
