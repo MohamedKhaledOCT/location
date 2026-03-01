@@ -375,11 +375,80 @@
             transition: width 0.5s;
         }
 
+        /* Share & Filter */
+        .share-btn {
+            background: rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .share-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .filter-banner {
+            background: linear-gradient(135deg, #1b5e20, #388e3c);
+            color: white;
+            text-align: center;
+            padding: 12px 20px;
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            display: none;
+            font-size: 1em;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-banner.show {
+            display: flex;
+        }
+
+        .filter-banner a {
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+
+        .filter-banner a:hover {
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1b5e20;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.9em;
+            z-index: 200;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
 
         /* ═══════════════════════════════════════
            RESPONSIVE — Tablet & Mobile
            ═══════════════════════════════════════ */
-
         /* Tablet */
         @media (max-width: 900px) {
             body {
@@ -603,7 +672,10 @@
                 animation: none !important;
             }
 
-            .print-btn {
+            .print-btn,
+            .share-btn,
+            .filter-banner,
+            .toast {
                 display: none !important;
             }
 
@@ -895,6 +967,12 @@
 <body>
     <div class="container">
 
+        <div id="filterBanner" class="filter-banner">
+            <span id="filterText"></span>
+            <a href="?">← الرجوع للتقرير الكامل</a>
+        </div>
+        <div id="toastMsg" class="toast"></div>
+
         <div class="report-header">
             <div class="company-badge">🏢 شركة ماليبو</div>
             <h1>تقرير حضور وزيارات المناديب</h1>
@@ -1041,10 +1119,14 @@
             // Store for summary
             rep._stats = { workingDays, metTarget, missedTarget, totalVisits, avg, pct, missedList, metList };
 
+            const repIdx = reps.indexOf(rep);
             let html = `<div class="rep-card">
         <div class="rep-card-header">
             <h3>${rep.name}</h3>
-            <span class="rep-region">📍 ${rep.region}</span>
+            <span style="display:flex;align-items:center;gap:8px;">
+                <button class="share-btn" onclick="copyRepLink(${repIdx})">📎 نسخ الرابط</button>
+                <span class="rep-region">📍 ${rep.region}</span>
+            </span>
         </div>
         ${rep.note ? `<div style="padding:8px 16px;background:#eff6ff;font-size:0.85em;color:#1e40af;border-bottom:1px solid var(--border);">ℹ️ ${rep.note}</div>` : ''}
         <div class="rep-stats">
@@ -1135,10 +1217,42 @@
             return html;
         }
 
-        // Render
+        // Copy link for individual rep
+        function copyRepLink(idx) {
+            const url = window.location.origin + window.location.pathname + '?rep=' + idx;
+            navigator.clipboard.writeText(url).then(() => {
+                const toast = document.getElementById('toastMsg');
+                toast.textContent = '✅ تم نسخ رابط ' + reps[idx].name;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
+            });
+        }
+
+        // Check URL for rep filter
+        const urlParams = new URLSearchParams(window.location.search);
+        const repFilter = urlParams.get('rep');
         const grid = document.getElementById('repsGrid');
-        reps.forEach(rep => { grid.innerHTML += buildRepCard(rep); });
-        document.getElementById('summaryTable').innerHTML = buildSummaryTable();
+
+        if (repFilter !== null && reps[parseInt(repFilter)]) {
+            // Single rep mode
+            const idx = parseInt(repFilter);
+            const rep = reps[idx];
+            grid.innerHTML = buildRepCard(rep);
+            // Build summary for just this rep
+            document.getElementById('summaryTable').innerHTML = buildSummaryTable();
+            // Show filter banner
+            const banner = document.getElementById('filterBanner');
+            banner.classList.add('show');
+            document.getElementById('filterText').textContent = '👤 عرض تقرير: ' + rep.name + ' (' + rep.region + ')';
+            // Hide summary section in single rep mode
+            document.querySelector('.summary-section').style.display = 'none';
+            // Update page title
+            document.title = 'تقرير ' + rep.name + ' - شركة ماليبو';
+        } else {
+            // Full report mode
+            reps.forEach(rep => { grid.innerHTML += buildRepCard(rep); });
+            document.getElementById('summaryTable').innerHTML = buildSummaryTable();
+        }
     </script>
 
 </body>
