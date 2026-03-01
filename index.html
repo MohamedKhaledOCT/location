@@ -376,6 +376,189 @@
         }
 
 
+        /* ═══════════════════════════════════════
+           RESPONSIVE — Tablet & Mobile
+           ═══════════════════════════════════════ */
+
+        /* Tablet */
+        @media (max-width: 900px) {
+            body {
+                padding: 16px;
+            }
+
+            .report-header {
+                padding: 24px 16px;
+            }
+
+            .report-header h1 {
+                font-size: 1.5em;
+            }
+
+            .reps-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .summary-table-wrap {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .summary-table-wrap table {
+                min-width: 700px;
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            body {
+                padding: 8px;
+                font-size: 14px;
+                line-height: 1.5;
+            }
+
+            .report-header {
+                padding: 18px 12px;
+                margin-bottom: 16px;
+                border-radius: 8px;
+            }
+
+            .report-header h1 {
+                font-size: 1.2em;
+            }
+
+            .report-header p {
+                font-size: 0.85em;
+                margin-top: 4px;
+            }
+
+            .company-badge {
+                font-size: 0.9em;
+                padding: 3px 14px;
+                margin-bottom: 8px;
+            }
+
+            .notes-card {
+                padding: 12px 14px;
+                margin-bottom: 16px;
+                border-radius: 8px;
+            }
+
+            .notes-card h3 {
+                font-size: 1em;
+            }
+
+            .notes-card li {
+                font-size: 0.85em;
+                margin-bottom: 4px;
+            }
+
+            .section-title {
+                font-size: 1.15em;
+                margin: 20px 0 12px;
+            }
+
+            .reps-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                margin-bottom: 20px;
+            }
+
+            .rep-card {
+                border-radius: 8px;
+            }
+
+            .rep-card-header {
+                padding: 10px 12px;
+            }
+
+            .rep-card-header h3 {
+                font-size: 0.95em;
+            }
+
+            .rep-region {
+                font-size: 0.75em;
+                padding: 2px 8px;
+            }
+
+            .rep-stats {
+                padding: 8px 10px;
+                gap: 6px;
+            }
+
+            .stat-box {
+                padding: 5px 3px;
+                font-size: 0.7em;
+                min-width: 60px;
+                border-radius: 6px;
+            }
+
+            .stat-box .val {
+                font-size: 1.2em;
+            }
+
+            .rep-card th {
+                padding: 6px 4px;
+                font-size: 0.75em;
+            }
+
+            .rep-card td {
+                padding: 5px 4px;
+                font-size: 0.8em;
+            }
+
+            .badge {
+                font-size: 0.7em;
+                padding: 1px 6px;
+            }
+
+            .day-name {
+                font-size: 0.7em;
+            }
+
+            .summary-section {
+                margin-top: 20px;
+            }
+
+            .summary-table-wrap {
+                border-radius: 8px;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .summary-table-wrap table {
+                min-width: 650px;
+            }
+
+            .summary-table-wrap thead th {
+                padding: 8px 4px;
+                font-size: 0.75em;
+            }
+
+            .summary-table-wrap td {
+                padding: 8px 4px;
+                font-size: 0.8em;
+            }
+
+            .missed-days-list .missed-item,
+            .met-days-list .met-item {
+                font-size: 0.75em;
+                padding: 1px 5px;
+            }
+
+            .perf-bar {
+                height: 6px;
+            }
+
+            .print-btn {
+                bottom: 16px;
+                left: 16px;
+                padding: 10px 20px;
+                font-size: 0.85em;
+                border-radius: 40px;
+            }
+        }
+
         /* Print Button */
         .print-btn {
             position: fixed;
