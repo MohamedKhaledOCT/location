@@ -989,8 +989,8 @@
                 <li><strong>توجيه إداري:</strong> المندوب <strong>حسين (القاهرة)</strong> التارجت الخاص به
                     <strong>لوكيشن واحد (1) في اليوم</strong>، بناءً على تعليمات أ/نادر مدير المبيعات.
                 </li>
-                <li>المندوب <strong>محمد نصار</strong> بدأ العمل يوم <strong>1 فبراير</strong>، والمندوب
-                    <strong>علاء</strong> بدأ يوم <strong>3 فبراير</strong>.
+                <li>المندوب <strong>محمد نصار</strong> والمندوب <strong>علاء</strong> بدأا العمل يوم <strong>1
+                        فبراير</strong>.
                 </li>
                 <li>باقي المناديب: التارجت المطلوب <strong>3 لوكيشن/زيارات يومياً</strong>.</li>
             </ul>
@@ -1074,8 +1074,9 @@
             },
             {
                 name: 'علاء', region: 'الصعيد', target: 3, offDay: 'friday',
-                note: 'بدأ العمل يوم 3 فبراير',
+                note: 'بدأ العمل يوم 1 فبراير',
                 data: [
+                    { d: '1/2', v: 0 }, { d: '2/2', v: 0 },
                     { d: '3/2', v: 1 }, { d: '4/2', v: 1 }, { d: '5/2', v: 1 },
                     { d: '7/2', v: 5 }, { d: '8/2', v: 2 }, { d: '9/2', v: 2 }, { d: '10/2', v: 2 }, { d: '11/2', v: 2 }, { d: '12/2', v: 2 },
                     { d: '14/2', v: 5 }, { d: '15/2', v: 0 }, { d: '16/2', v: 3 }, { d: '17/2', v: 2 }, { d: '18/2', v: 0 }, { d: '19/2', v: 0, off: true, offLabel: 'رمضان' },
@@ -1100,14 +1101,17 @@
         function isFriday(ds) { return fridays.includes(ds); }
 
         function buildRepCard(rep) {
-            let workingDays = 0, metTarget = 0, missedTarget = 0, totalVisits = 0;
+            let workingDays = 0, metTarget = 0, missedTarget = 0, totalVisits = 0, zeroDays = 0, oneDays = 0;
             const missedList = [];
             const metList = [];
+            const zeroList = [];
 
             rep.data.forEach(entry => {
                 if (entry.off || entry.v === -1) return;
-                if (isFriday(entry.d) && rep.offDay === 'friday' && entry.v === 0) return; // skip fridays only if 0 visits
+                if (isFriday(entry.d) && rep.offDay === 'friday' && entry.v === 0) return;
                 workingDays++;
+                if (entry.v === 0) { zeroDays++; zeroList.push(entry); }
+                if (entry.v === 1) { oneDays++; }
                 if (entry.v >= rep.target) { metTarget++; totalVisits += entry.v; metList.push(entry); }
                 else { missedTarget++; totalVisits += entry.v; missedList.push(entry); }
             });
@@ -1116,7 +1120,7 @@
             const pct = workingDays > 0 ? Math.round((metTarget / workingDays) * 100) : 0;
 
             // Store for summary
-            rep._stats = { workingDays, metTarget, missedTarget, totalVisits, avg, pct, missedList, metList };
+            rep._stats = { workingDays, metTarget, missedTarget, zeroDays, totalVisits, avg, pct, missedList, metList, zeroList };
 
             const repIdx = reps.indexOf(rep);
             let html = `<div class="rep-card">
@@ -1132,6 +1136,8 @@
             <div class="stat-box stat-total"><span class="val">${workingDays}</span>يوم عمل</div>
             <div class="stat-box stat-met"><span class="val">${metTarget}</span>حقق التارجت</div>
             <div class="stat-box stat-missed"><span class="val">${missedTarget}</span>لم يحقق</div>
+            <div class="stat-box" style="background:#fff0f0;color:#b91c1c;"><span class="val">${zeroDays}</span>صفر زيارة</div>
+            <div class="stat-box" style="background:#fef9c3;color:#92400e;"><span class="val">${oneDays}</span>1 زيارة</div>
             <div class="stat-box stat-avg"><span class="val">${avg}</span>متوسط</div>
         </div>
         <table>
